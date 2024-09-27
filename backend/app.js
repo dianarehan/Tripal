@@ -16,6 +16,11 @@ const port = process.env.PORT || "8000";
 const routes = require('./routes/index');
 app.use(cors());
 
+
+//Route Imports
+const routes = require('./routes/index');
+
+
 // configurations
 // Mongo DB
 mongoose.connect(MongoURI)
