@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors')
 mongoose.set('strictQuery', false);
 require("dotenv").config();
+
+const routes = require ('./routes/preferenceTagRoutes');
 const MongoURI = process.env.MONGO_URI;
 
 //App variables
