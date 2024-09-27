@@ -5,5 +5,4 @@ const Home = () => {
         </div> 
     )
 }
-//test comment
 export default Home;
