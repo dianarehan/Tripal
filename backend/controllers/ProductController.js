@@ -1,0 +1,25 @@
+const productModel = require('../models/Product.js');
+const { default: mongoose } = require('mongoose');
+
+const createProduct = async(req,res) => {
+   const {name, sellerID, price, description, quantity, picture} = req.body;
+   try{
+      const product = await productModel.create({name, sellerID, price, description, quantity, picture})
+      res.status(200).json(user);
+   }
+   catch(error){
+      res.status(400).json({error: error.message});
+   }
+}
+
+const getProducts = async (req, res) => {
+   try{
+      const allProducts = await productModel.find()
+      res.status(200).json(allProducts);
+  }
+  catch(error){
+   res.status(400).json({error: error.message});
+  }
+}
+
+module.exports = {createProduct, getProducts};
