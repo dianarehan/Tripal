@@ -5,7 +5,7 @@ const createProduct = async(req,res) => {
    const {name, sellerID, price, description, quantity, picture} = req.body;
    try{
       const product = await productModel.create({name, sellerID, price, description, quantity, picture})
-      res.status(200).json(user);
+      res.status(200).json(product);
    }
    catch(error){
       res.status(400).json({error: error.message});
@@ -22,4 +22,23 @@ const getProducts = async (req, res) => {
   }
 }
 
-module.exports = {createProduct, getProducts};
+const searchProductsByName = async (req, res) => {
+   const { name } = req.query;
+    if (!name) {
+     return res.status(400).json({ error: 'Product name is required' });
+   }
+
+   try {
+     const products = await productModel.find({name: { $regex: new RegExp(name, 'i')}});
+ 
+     if (products.length === 0) {
+       return res.status(404).json({ message: 'No products found' });
+     }
+ 
+     res.status(200).json(products);
+   } catch (error) {
+     res.status(400).json({ error: error.message });
+   }
+ };
+
+module.exports = {createProduct, getProducts, searchProductsByName};
