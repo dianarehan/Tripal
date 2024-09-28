@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const routes = [
-    './PreferenceTagRoutes',
+    './preferenceTagRoutes',
     './SellerRoutes',
     './TourGuideRoutes',
     './AdvertiserRoutes',
     './activityControllerRoutes',
-    './TouristRoutes'
+    './TouristRoutes',
+    './ProductRoutes',
 ];
 
 routes.forEach(route => {
