@@ -3,6 +3,13 @@ const { default: mongoose } = require('mongoose');
 
 const createProduct = async(req,res) => {
    const {name, sellerID, price, description, quantity, picture} = req.body;
+
+   if (!name || !sellerID || !price || !description || !quantity || !picture) {
+      return res.status(400).json({ error: 'All fields are required' });
+   }
+   if (!mongoose.Types.ObjectId.isValid(sellerID)) {
+      return res.status(400).json({ error: 'Invalid sellerID' });
+    }
    try{
       const product = await productModel.create({name, sellerID, price, description, quantity, picture})
       res.status(200).json(product);
@@ -29,7 +36,7 @@ const searchProductsByName = async (req, res) => {
    }
 
    try {
-     const products = await productModel.find({name: { $regex: new RegExp(name, 'i')}});
+      const products = await productModel.find({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
  
      if (products.length === 0) {
        return res.status(404).json({ message: 'No products found' });
