@@ -111,7 +111,7 @@ const deleteUser = async (req, res) => {
   
       // Combine all user data into one array
       const allUsers = [
-        // ...admins.map(user => ({ ...user._doc, userType: "Admin" })), 
+        ...admins.map(user => ({ ...user._doc, userType: "Admin" })), 
         ...governors.map(user => ({ ...user._doc, userType: "Tourism Governor" })),
         ...sellers.map(user => ({ ...user._doc, userType: "Sellers" })),
         ...tourGuides.map(user => ({ ...user._doc, userType: "Tour Guides" })),
