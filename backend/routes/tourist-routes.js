@@ -4,7 +4,4 @@ const { createTourist } = require('../controllers/TouristController.js');
 
 router.post("/createTourist", createTourist);
 
-
-
-
 module.exports = router;

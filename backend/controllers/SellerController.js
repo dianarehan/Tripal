@@ -1,5 +1,4 @@
 const sellerModel=require('../models/Seller.js');
-const { default: mongoose } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const createSeller= async(req,res) => {

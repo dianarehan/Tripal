@@ -1,5 +1,4 @@
 const touristModel = require('../models/Tourist');
-const { default: mongoose } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const createTourist = async (req, res) => {

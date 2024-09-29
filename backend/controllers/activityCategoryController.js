@@ -1,6 +1,4 @@
 const activityCategory = require('../models/activityCategory')
-const { default: mongoose } = require('mongoose');
-
 
 const createActivityCategory = async (req, res) => {
     try {
@@ -12,8 +10,8 @@ const createActivityCategory = async (req, res) => {
     catch (error) {
         res.status(400).json({ error: error.message });
     }
-
 }
+
 const getActivityCategories = async (req, res) => {
     try {
         const existingActivityCategories = await activityCategory.find({})
@@ -22,12 +20,9 @@ const getActivityCategories = async (req, res) => {
     catch (error) {
         res.status(400).json({ error: error.message });
     }
-
 }
-
 
 module.exports = {
     createActivityCategory,
     getActivityCategories
-
 }

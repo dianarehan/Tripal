@@ -1,5 +1,4 @@
 const tourGuideModel=require('../models/TourGuide.js');
-const { default: mongoose } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const createTourGuide = async(req,res) => {

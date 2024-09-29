@@ -1,5 +1,4 @@
 const advertiserModel=require('../models/Advertiser.js');
-const { default: mongoose } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const createAdvertiser= async(req,res) => {

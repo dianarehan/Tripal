@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 const activityCategorySchema = new Schema({
@@ -7,8 +8,7 @@ const activityCategorySchema = new Schema({
         required: true,
         unique: true
     }
-
 }, { timestamps: true });
 
-const activityCategory = mongoose.model('activityCategory', activityCategorySchema);
-module.exports = activityCategory;
+const ActivityCategory = mongoose.model('activityCategory', activityCategorySchema);
+module.exports = ActivityCategory;
