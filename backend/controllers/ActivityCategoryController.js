@@ -1,4 +1,4 @@
-const activityCategory = require('../models/activityCategory')
+const activityCategory = require('../models/ActivityCategory')
 const { default: mongoose } = require('mongoose');
 
 

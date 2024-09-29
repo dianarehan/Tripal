@@ -6,7 +6,7 @@ const routes = [
     './SellerRoutes',
     './TourGuideRoutes',
     './AdvertiserRoutes',
-    './activityControllerRoutes',
+    './ActivityControllerRoutes',
     './TouristRoutes',
     './ProductRoutes',
 ];
