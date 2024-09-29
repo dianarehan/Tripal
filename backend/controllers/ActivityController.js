@@ -62,7 +62,8 @@ const updateActivity = async (req, res) => {
     if (!activity) {
       return res.status(404).json({ error: 'Activity not found' });
     }
-    //validate and update category if provided
+    
+    // Validate and update category if provided
     if (category) {
       const existingCategory = await ActivityCategory.findOne({ Name: category });
       if (existingCategory) {
@@ -82,6 +83,7 @@ const updateActivity = async (req, res) => {
         return res.status(404).json({ error: 'Tags not found' });
       }
     }
+
     activity.title = title || activity.title;
     activity.description = description || activity.description;
     activity.date = date || activity.date;
@@ -101,16 +103,64 @@ const deleteActivity = async (req, res) => {
   try {
     const activity = await Activity.findByIdAndDelete(req.params.id);
     if (!activity) 
-        return res.status(404).json({ error: 'Activity not found' });
+      return res.status(404).json({ error: 'Activity not found' });
     res.status(200).json({ message: 'Activity deleted' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
+const filterActivities = async (req, res) => {
+  const { budgetMin, budgetMax, startDate, endDate, category, rating } = req.query;
+  
+  try{
+
+    let filters = {};
+
+    // Filter based on budget 
+    if (budgetMin || budgetMax) {
+      filters.priceRange = {};
+      if (budgetMin) filters.priceRange.$gte = minPrice;
+      if (budgetMax) filters.priceRange.$lte = maxPrice;
+    }
+
+    // Filter based on date
+    if (startDate || endDate) {
+      filters.date = {};
+      if (startDate) filters.date.$gte = new Date(startDate);
+      if (endDate) filters.date.$lte = new Date(endDate);
+    }
+    
+    // Filter based on category
+    if (category) {
+      const existingCategory = await ActivityCategory.findOne({ Name: category });
+      if (existingCategory) {
+        filters.category = existingCategory._id;
+      } else {
+        return res.status(404).json({ error: 'Category not found' });
+      }
+    }
+
+    // Filter based on rating
+    // where should we get the ratings from???
+    if (rating) {
+      filters.ratings = { $gte: rating };
+    }
+
+    const filteredActivities = await Activity.find(filters)
+      .populate('category')
+      .populate('tags');
+
+    res.status(200).json(filteredActivities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports={
-    createActivity,
-    getActivities,
-    updateActivity,
-    deleteActivity
+  createActivity,
+  getActivities,
+  updateActivity,
+  deleteActivity,
+  filterActivities
 }
