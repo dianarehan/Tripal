@@ -42,12 +42,22 @@ const createActivity = async (req, res) => {
 };
 
 const getActivities = async (req, res) => {
+  const { username } = req.query;
   try {
-    const { username } = req.params; 
-    const activities = await Activity.find({ advertiser: username });
-    if (activities.length === 0) {
-      return res.status(404).json({ error: "No activities found for this advertiser" });
+    let activities;
+
+    if (username) {
+      activities = await Activity.find({ advertiser: username });
+      if (activities.length === 0) {
+        return res.status(404).json({ error: "No activities found for this advertiser" });
+      }
+    } else {
+      activities = await Activity.find();
+      if (activities.length === 0) {
+        return res.status(404).json({ error: "No activities available" });
+      }
     }
+
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -148,59 +158,6 @@ const searchActivities = async (req, res) => {
   }
 };
 
-// separate params; pointless; just like filter
-// const searchActivities = async (req, res) => {
-//   const { name, category, tags } = req.query;
-
-//   try {
-//     let search = {};
-
-//     // Search by name
-//     if (name) {
-//       search.title = { $regex: name, $options: 'i' };;
-//     }
-
-//     // Search by category
-//     if (category) {
-//       const existingCategories = await ActivityCategory.find({
-//         Name: { $regex: category, $options: 'i' }
-//       });
-
-//       if (existingCategories.length > 0) {
-//         search.category = { $in: existingCategories.map(cat => cat._id) };
-//       } else {
-//         return res.status(404).json({ error: 'No matching categories found' });
-//       }
-//     }
-
-//     // Search by tags
-//     if (tags) {
-//       const tagNames = Array.isArray(tags) ? tags : [tags];
-//       const existingTags = await PreferenceTag.find({
-//         Name: { $in: tagNames.map(tag => new RegExp(tag, 'i')) } 
-//       });
-
-//       if (existingTags.length > 0) {
-//         search.tags = { $in: existingTags.map(tag => tag._id) };
-//       } else {
-//         return res.status(404).json({ error: 'No matching tags found' });
-//       }
-//     }
-
-//     const activities = Object.keys(search).length > 0
-//     ? await Activity.find(search).populate('category').populate('tags')
-//     : await Activity.find().populate('category').populate('tags');
-
-//     if (activities.length === 0) {
-//       return res.status(404).json({ error: 'No activities found' });
-//     }
-
-//     res.status(200).json(activities);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// };
-
 const filterActivities = async (req, res) => {
   const { budgetMin, budgetMax, startDate, endDate, category, rating } = req.query;
   
@@ -235,7 +192,6 @@ const filterActivities = async (req, res) => {
     }
 
     // Filter based on rating
-    // where should we get the ratings from???
     if (rating) {
       filters.ratings = { $gte: rating };
     }
