@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const User = require ('../models/User');
+const User = require('../models/User');
 const sellerSchema = new Schema(
   {
     name: {
@@ -15,5 +15,5 @@ const sellerSchema = new Schema(
   },
   { timestamps: true }
 );
-const Seller = User.discriminator('seller', sellerSchema);
+const Seller = User.discriminator('Seller', sellerSchema);
 module.exports = Seller;

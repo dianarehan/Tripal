@@ -5,7 +5,7 @@ const createUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
 
-    const validRoles = ['seller', 'advertiser', 'admin', 'tour guide', 'tourist','tourism governor'];
+    const validRoles = ['Seller', 'Advertiser', 'Admin', 'Tour guide', 'Tourist', 'Tourism governor'];
     if (!validRoles.includes(role)) {
       return res.status(400).json({ error: 'Invalid role' });
     }
@@ -17,7 +17,7 @@ const createUser = async (req, res) => {
       email,
       password: hashedPassword,
       role,
-      accepted: false, 
+      accepted: false,
     });
 
     res.status(200).json(user);
