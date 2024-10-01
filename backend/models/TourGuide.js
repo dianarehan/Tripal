@@ -9,7 +9,7 @@ const tourGuideSchema = new Schema(
     },
 
     experienceYears: {
-      type: Int16Array,
+      type: Number,
       required: true
     }
   },

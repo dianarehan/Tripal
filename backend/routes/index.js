@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const routes = [
+  "./UserRoutes",
   "./PreferenceTagRoutes",
   "./SellerRoutes",
   "./TourGuideRoutes",

@@ -4,17 +4,17 @@ const User = require ('../models/User');
 const advertiserSchema = new Schema(
   {
     companyLink: {
-      type: string,
+      type: String,
       required: true
     },
 
     hotline: {
-      type: Int16Array,
+      type: Number,
       required: true
     },
 
     companyProfile: {
-      type: string,
+      type: String,
       required: true
     }
 

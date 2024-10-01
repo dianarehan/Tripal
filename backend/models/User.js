@@ -30,7 +30,8 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   }
-}, baseOptions);
+},{timestamps: true,
+  baseOptions} );
 
 // Create the base User model
 const User = mongoose.model('User', userSchema);
