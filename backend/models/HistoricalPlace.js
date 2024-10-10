@@ -83,12 +83,6 @@ const historicalPlaceSchema = new Schema({
             required: true
         }
     },
-    // tags:{
-    //     type: [mongoose.Types.ObjectId],
-    //     ref:'historicaltagtypes',
-    //     required:false,
-    //     default:[]
-    // },
     tags: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'HistoricalTagType',

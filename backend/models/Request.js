@@ -19,6 +19,7 @@ const requestSchema = new mongoose.Schema(
       enum: ["seller", "tourGuide", "advertiser"],
       required: true,
     },
+    // documents: [String], used for the future 
   },
   { timestamps: true }
 );

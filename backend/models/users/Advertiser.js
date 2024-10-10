@@ -79,7 +79,7 @@ const advertiserSchema = new Schema(
           default: {}
         },
         certifications: {
-          type: [String], // Array of strings
+          type: [String],
           required: false
         },
         awards: [

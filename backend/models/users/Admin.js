@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const AdminSchema = new Schema(
   {
-    username: {
+    userName: {
       type: String,
       required: true,
       unique: true,
@@ -12,11 +12,11 @@ const AdminSchema = new Schema(
       type: String,
       required: true,
     },
- 
+
   },
   { timestamps: true }
 );
 
-const Admin = mongoose.model(  "Admin",  AdminSchema);
+const Admin = mongoose.model("Admin", AdminSchema);
 
 module.exports = Admin;

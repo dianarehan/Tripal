@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const TourismGovernorSchema = new Schema(
   {
-    username: {
+    userName: {
       type: String,
       required: true,
       unique: true,
