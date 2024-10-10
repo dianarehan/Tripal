@@ -1,20 +1,43 @@
 const mongoose = require("mongoose");
 const Request = require("../models/Request.js");
-
+const User = require('../models/users/User.js')
 const createRequest = async (req, res) => {
     const { userName, email, password, role } = req.body;
     try {
-        if (!userName ||!email || !password || !role ) {
+        if (!userName || !email || !password || !role) {
             res.status(406).json('All fields are required!');
         }
-        const createdRequest = await Request.create({ userName,email,password,role });
+        //check unique userName across all users
+        const existingUserName = await User.findOne({ userName });
+        if (existingUserName) {
+            return res.status(400).json({ error: "Username already exists" });
+        }
+
+        //check unique email across all users
+        const existingEmail = await User.findOne({ email });
+        if (existingEmail) {
+            return res.status(400).json({ error: "Email already exists" });
+        }
+
+        //check unique userName across all requests
+        const existingUserNameRequests = await Request.findOne({ userName });
+        if (existingUserNameRequests) {
+            return res.status(400).json({ error: "Request has been submitted with this username" });
+        }
+
+        //check unique email across all requests
+        const existingEmailRequests = await Request.findOne({ email });
+        if (existingEmailRequests) {
+            return res.status(400).json({ error: "Request has been submitted with this email" });
+        }
+        const createdRequest = await Request.create({ userName, email, password, role });
         res.status(201).json(createdRequest);
     }
     catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
-    
+
 
 const getRequests = async (req, res) => {
     try {
@@ -47,4 +70,4 @@ module.exports = {
     createRequest,
     getRequests,
     deleteRequest
-  }
+}

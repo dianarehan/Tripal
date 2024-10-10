@@ -1,6 +1,6 @@
-const advertiserModel = require('../models/Advertiser.js');
+const advertiserModel = require('../models/users/Advertiser.js');
 const bcrypt = require('bcrypt');
-const userModel = require('../models/User.js')
+const userModel = require('../models/users/User.js')
 
 const createAdvertiser = async (req, res) => {
     try {
@@ -8,11 +8,11 @@ const createAdvertiser = async (req, res) => {
         // if (!userName || !password || !email) {
         //     return res.status(400).json({ error: "Missing required fields" });
         //   }
-        const hashedPassword = await bcrypt.hash(req.body.password, 10); 
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
         const existingName = await advertiserModel.findOne({ userName });
         if (existingName) {
-          return res.status(409).json({ error: "Username already exists" });
+            return res.status(409).json({ error: "Username already exists" });
         }
 
         const existingEmail = await advertiserModel.findOne({ email });
@@ -24,9 +24,9 @@ const createAdvertiser = async (req, res) => {
             userName: userName,
             email: email,
             password: hashedPassword,
-            website, 
-            hotline, 
-            companyProfile 
+            website,
+            hotline,
+            companyProfile
         });
         const id = advertiser._id
         await userModel.create({
@@ -63,27 +63,27 @@ const updateAdvertiser = async (req, res) => {
         const updateData = {
             userName,
             email,
-            password: hashedPassword, 
+            password: hashedPassword,
             website,
             hotline
-          };
+        };
         if (companyProfile) {
             // Merge the existing companyProfile with the new fields
             updateData['companyProfile'] = {
-              ...existingAdvertiser.companyProfile.toObject(), // Preserve existing fields
-              ...companyProfile // Overwrite with new data
+                ...existingAdvertiser.companyProfile.toObject(), // Preserve existing fields
+                ...companyProfile // Overwrite with new data
             };
-          }
+        }
 
-          const updatedAdvertiser = await advertiserModel.findByIdAndUpdate(
+        const updatedAdvertiser = await advertiserModel.findByIdAndUpdate(
             req.params.id,
             { $set: updateData }, // Use $set to update only the provided fields
             { new: true, runValidators: true }
-          );
-          
-          if (!updatedAdvertiser) {
+        );
+
+        if (!updatedAdvertiser) {
             return res.status(404).json({ error: "Advertiser not found" });
-          }
+        }
 
         res.status(200).json(updatedAdvertiser);
     } catch (error) {

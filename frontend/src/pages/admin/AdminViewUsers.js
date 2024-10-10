@@ -31,7 +31,7 @@ const UserList = () => {
   const deleteUsers = async (id) => {
     try {
       const response = await deleteUser(id); // Call API to delete user
-      const message = response.message || "User deleted successfully"; 
+      const message = response.message || "User deleted successfully";
       const updatedData = users.filter((item) => item._id !== id);
       setUsers(updatedData);
       toast.success(message); // Show success toast when a user is deleted
@@ -45,25 +45,26 @@ const UserList = () => {
 
   return (
     <>
-     <AdminNavBar />
-    <div className="user-list-container">
-      
-      <h1 className="user-list-title">User List</h1>
-      <ul className="user-list">
-        {users.map(user => (
-          <li key={user._id} className="user-list-item">
-            <div className="user-details">
-              <span><strong>ID:</strong> {user._id}</span>
-              <span><strong>Type:</strong> {user.userType}</span>
-            </div>
-            <button className="delete-button" onClick={() => deleteUsers(user._id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <AdminNavBar />
+      <div className="user-list-container">
 
-      {/* Toast container for showing notifications */}
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
-    </div>
+        <h1 className="user-list-title">User List</h1>
+        <ul className="user-list">
+          {users.map(user => (
+            <li key={user._id} className="user-list-item">
+              <div className="user-details">
+                <span><strong>User Name:</strong> {user.userName}</span>
+                <span><strong>ID:</strong> {user._id}</span>
+                <span><strong>Type:</strong> {user.userType}</span>
+              </div>
+              <button className="delete-button" onClick={() => deleteUsers(user._id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+
+        {/* Toast container for showing notifications */}
+        <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+      </div>
     </>
   );
 };

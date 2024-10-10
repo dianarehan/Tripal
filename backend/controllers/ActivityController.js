@@ -1,9 +1,9 @@
 const Activity = require("../models/Activity");
-const Advertiser = require("../models/Advertiser");
+const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
 const Rating = require("../models/Rating");
-const Tourist = require("../models/Tourist.js");
+const Tourist = require("../models/users/Tourist.js");
 
 
 const createActivity = async (req, res) => {

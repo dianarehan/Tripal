@@ -1,7 +1,8 @@
-const touristModel = require("../models/Tourist");
+const touristModel = require("../models/users/Tourist");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
-const userModel = require('../models/User.js')
+const User = require('../models/users/User.js')
+
 
 
 
@@ -45,9 +46,11 @@ const createTourist = async (req, res) => {
     const id = tourist._id;
 
     // Create associated user role
-    await userModel.create({
-      userID: id,
-      role: "tourist",
+    await User.create({
+      userId: id,
+      userName: tourist.userName,
+      email: tourist.email,
+      role: "Tourist"
     });
 
     return res.status(201).json(tourist);

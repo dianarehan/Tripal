@@ -4,8 +4,8 @@ const cloudinary = require("../cloudinary");
 
 const Product = require("../models/Product.js");
 const Rating = require("../models/Rating");
-const Tourist = require("../models/Tourist.js");
-const Seller = require("../models/Seller.js");
+const Tourist = require("../models/users/Tourist.js");
+const Seller = require("../models/users/Seller.js");
 
 const createProduct = asyncHandler(async (req, res) => {
   const { name, sellerID, price, description, quantity, picture } = req.body;

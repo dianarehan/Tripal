@@ -13,13 +13,13 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
     unique: true,
+    sparse: true
   },
   role: {
     type: String,
     required: true,
-    enum: ["tour guide", "advertiser", "seller", "tourist", "governor", "admin"],
+    enum: ["Tour Guide", "Advertiser", "Seller", "Tourist", "Tourism Governor", "Admin"],
   }
 });
 

@@ -67,7 +67,7 @@ const SignUpAllUsers = () => {
       if (role === "seller") {
         const data = await createRequest({
           ...commonUser,
-          role: "seller"
+          role: "Seller"
         })
         // setRequest(data)
         console.log({
@@ -77,20 +77,20 @@ const SignUpAllUsers = () => {
         navigate("/seller/pending", {
           state: {
             ...commonUser,
-            role: "seller"
+            role: "Seller"
 
           }
         })
       } else if (role === "tour-guide") {
         await createRequest({
           ...commonUser,
-          role: "tourGuide"
+          role: "Tour Guide"
 
         })
         navigate("/seller/pending", {
           state: {
             ...commonUser,
-            role: "tourGuide"
+            role: "Tour Guide"
 
           }
         })
@@ -98,12 +98,12 @@ const SignUpAllUsers = () => {
       } else if (role === "advertiser") {
         await createRequest({
           ...commonUser,
-          role: "advertiser"
+          role: "Advertiser"
         })
         navigate("/seller/pending", {
           state: {
             ...commonUser,
-            role: "advertiser"
+            role: "Advertiser"
 
           }
         })

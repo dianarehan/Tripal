@@ -16,7 +16,7 @@ const requestSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["seller", "tourGuide", "advertiser"],
+      enum: ["Seller", "Tour Guide", "Advertiser"],
       required: true,
     },
     // documents: [String], used for the future 
