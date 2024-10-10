@@ -19,8 +19,8 @@ const userSchema = new Schema({
   role: {
     type: String,
     required: true,
-    enum: ["tour guide", "advertiser", "seller"],
-  },
+    enum: ["tour guide", "advertiser", "seller", "tourist", "governor", "admin"],
+  }
 });
 
 const User = mongoose.model("User", userSchema);
