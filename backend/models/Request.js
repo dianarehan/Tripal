@@ -19,6 +19,10 @@ const requestSchema = new mongoose.Schema(
       enum: ["Seller", "Tour Guide", "Advertiser"],
       required: true,
     },
+    status: {
+      type: String,
+      default: "pending"
+    }
     // documents: [String], used for the future 
   },
   { timestamps: true }
