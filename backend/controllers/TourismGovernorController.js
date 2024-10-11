@@ -20,6 +20,7 @@ const addTourismGovernor = async (req, res) => {
     if (existingUserNameRequests) {
       return res.status(400).json({ error: "Request has been submitted with this username" });
     }
+    console.log("data", userName, password)
     if (!userName || !password) {
       return res.status(400).json({ error: "Missing required fields: username and password" });
     }
