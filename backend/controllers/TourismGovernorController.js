@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const TourismGovernor = require("../models/users/TourismGovernor.js");
 const User = require('../models/users/User.js')
+const Request = require('../models/Request.js')
 
 const addTourismGovernor = async (req, res) => {
   try {
@@ -12,7 +13,10 @@ const addTourismGovernor = async (req, res) => {
     if (existingUserName) {
       return res.status(400).json({ error: "Username already exists" });
     }
-
+    const existingUserNameRequests = await Request.findOne({ userName });
+    if (existingUserNameRequests) {
+      return res.status(400).json({ error: "Request has been submitted with this username" });
+    }
     if (!userName || !password) {
       return res.status(400).json({ error: "Missing required fields: username and password" });
     }

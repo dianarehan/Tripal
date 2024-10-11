@@ -2,8 +2,7 @@ const touristModel = require("../models/users/Tourist");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const User = require('../models/users/User.js')
-
-
+const Request = require('../models/Request.js')
 
 
 const createTourist = async (req, res) => {
@@ -22,7 +21,16 @@ const createTourist = async (req, res) => {
     if (existingEmail) {
       return res.status(400).json({ error: "Email already exists" });
     }
+    const existingUserNameRequests = await Request.findOne({ userName });
+    if (existingUserNameRequests) {
+      return res.status(400).json({ error: "Request has been submitted with this username" });
+    }
 
+    //check unique email across all requests
+    const existingEmailRequests = await Request.findOne({ email });
+    if (existingEmailRequests) {
+      return res.status(400).json({ error: "Request has been submitted with this email" });
+    }
     // Validate required fields
     if (!userName || !email || !password || !mobileNumber || !nationality || !dateOfBirth || !job) {
       return res.status(400).json({ error: "Please add all fields" });

@@ -6,6 +6,7 @@ const Advertiser = require("../models/users/Advertiser.js");
 const Tourist = require("../models/users/Tourist.js");
 const TourismGovernor = require("../models/users/TourismGovernor.js");
 const User = require("../models/users/User.js");
+const Request = require('../models/Request.js')
 
 const addAdmin = async (req, res) => {
   try {
@@ -19,6 +20,11 @@ const addAdmin = async (req, res) => {
     const existingUserName = await User.findOne({ userName });
     if (existingUserName) {
       return res.status(400).json({ error: "Username already exists" });
+    }
+
+    const existingUserNameRequests = await Request.findOne({ userName });
+    if (existingUserNameRequests) {
+      return res.status(400).json({ error: "Request has been submitted with this username" });
     }
 
 

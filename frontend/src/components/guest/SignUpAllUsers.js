@@ -65,20 +65,21 @@ const SignUpAllUsers = () => {
 
     try {
       if (role === "seller") {
+        console.log({
+          ...commonUser,
+          role: "Seller"
+        })
         const data = await createRequest({
           ...commonUser,
           role: "Seller"
         })
+
         // setRequest(data)
-        console.log({
-          ...commonUser,
-          role: "seller"
-        })
+
         navigate("/seller/pending", {
           state: {
             ...commonUser,
             role: "Seller"
-
           }
         })
       } else if (role === "tour-guide") {
@@ -117,7 +118,7 @@ const SignUpAllUsers = () => {
         navigate("/tourist");
       }
     } catch (err) {
-      message.error(err.response.data.error);
+      message.error(err.message);
     }
   };
 
