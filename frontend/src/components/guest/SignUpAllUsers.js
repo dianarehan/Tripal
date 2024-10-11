@@ -50,7 +50,7 @@ const SignUpAllUsers = () => {
     };
 
     let newUser;
-
+    let response;
     if (role === "tourist") {
       newUser = {
         ...commonUser,
@@ -65,62 +65,55 @@ const SignUpAllUsers = () => {
 
     try {
       if (role === "seller") {
-        console.log({
+        response = await createRequest({
           ...commonUser,
           role: "Seller"
-        })
-        const data = await createRequest({
-          ...commonUser,
-          role: "Seller"
-        })
-
-        // setRequest(data)
-
+        });
         navigate("/seller/pending", {
           state: {
             ...commonUser,
             role: "Seller"
           }
-        })
+        });
       } else if (role === "tour-guide") {
-        await createRequest({
+        response = await createRequest({
           ...commonUser,
           role: "Tour Guide"
-
-        })
+        });
         navigate("/seller/pending", {
           state: {
             ...commonUser,
             role: "Tour Guide"
-
           }
-        })
-        // await createTourGuide(newUser);
+        });
       } else if (role === "advertiser") {
-        await createRequest({
+        response = await createRequest({
           ...commonUser,
           role: "Advertiser"
-        })
+        });
+        console.log("response", response)
         navigate("/seller/pending", {
           state: {
             ...commonUser,
             role: "Advertiser"
-
           }
-        })
-        // await createAdvertiser(newUser);
+        });
       } else if (role === "tourist") {
-        await createTourist(newUser);
+        response = await createTourist(newUser);
         message.success("Sign up successful!");
-      }
-
-      if (role === "tourist") {
         navigate("/tourist");
       }
-    } catch (err) {
-      message.error(err.message);
+
+    } catch (error) {
+      console.log('Error object:', error);
+      // Check if error response exists and display the error message
+
+      message.error(error.message); // Display backend error
+
     }
   };
+
+
 
   return (
     <div className="signUpUsersForm-container">
