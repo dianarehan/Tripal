@@ -13,7 +13,10 @@ const addTourismGovernor = async (req, res) => {
     if (existingUserName) {
       return res.status(400).json({ error: "Username already exists" });
     }
-    const existingUserNameRequests = await Request.findOne({ userName });
+    const existingUserNameRequests = await Request.findOne({
+      userName,
+      status: { $ne: 'rejected' }
+    });
     if (existingUserNameRequests) {
       return res.status(400).json({ error: "Request has been submitted with this username" });
     }

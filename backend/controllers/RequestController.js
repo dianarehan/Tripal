@@ -20,19 +20,20 @@ const createRequest = async (req, res) => {
             return res.status(400).json({ error: "Email already exists" });
         }
 
-        // Check unique userName across all requests
-        const existingUserNameRequests = await Request.findOne({ userName });
+        const existingUserNameRequests = await Request.findOne({
+            userName,
+            status: { $ne: 'rejected' }
+        });
         if (existingUserNameRequests) {
             return res.status(400).json({ error: "Request has been submitted with this username" });
         }
 
-        // Check unique email across all requests
-        const existingEmailRequests = await Request.findOne({ email });
+        const existingEmailRequests = await Request.findOne({ email, status: { $ne: 'rejected' } });
         if (existingEmailRequests) {
             return res.status(400).json({ error: "Request has been submitted with this email" });
         }
 
-        // If no errors, create a new request
+
         const createdRequest = await Request.create({ userName, email, password, role });
         res.status(201).json(createdRequest);
     } catch (error) {

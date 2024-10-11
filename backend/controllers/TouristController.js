@@ -21,13 +21,20 @@ const createTourist = async (req, res) => {
     if (existingEmail) {
       return res.status(400).json({ error: "Email already exists" });
     }
-    const existingUserNameRequests = await Request.findOne({ userName });
+    const existingUserNameRequests = await Request.findOne({
+      userName,
+      status: { $ne: 'rejected' }
+    });
     if (existingUserNameRequests) {
-      return res.status(400).json({ error: "Request has been submitted with this username" });
+      return res.status(400).json({
+        error: "Request has been submitted with this username"
+      });
     }
-
     //check unique email across all requests
-    const existingEmailRequests = await Request.findOne({ email });
+    const existingEmailRequests = await Request.findOne({
+      email,
+      status: { $ne: 'rejected' }
+    });
     if (existingEmailRequests) {
       return res.status(400).json({ error: "Request has been submitted with this email" });
     }
