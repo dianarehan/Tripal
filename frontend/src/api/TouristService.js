@@ -4,8 +4,10 @@ export async function createTourist(newUser) {
   try {
     await axios.post("/createTourist", newUser);
   } catch (error) {
-    console.error("error", error);
-    throw error;
+    const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
+    console.log("ERRPR MESSAGE", errorMessage)
+    throw new Error(errorMessage);
+
   }
 }
 export async function getTouristInformation(id) {
