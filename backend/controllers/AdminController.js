@@ -54,108 +54,53 @@ const addAdmin = async (req, res) => {
 
 
 const deleteUser = async (req, res) => {
+  console.log("I came here")
   const { id } = req.params; // Assuming you're passing id in the URL params like /deleteUser/:id
 
   try {
+    const correspondingUser = await User.find({ userId: id }) // Ensure to await the promise
 
-    // Define a function to find the user and determine which model to use
-    async function findDocumentById(id) {
-      let document;
-
-      // document = await Admin.findById(id);
-      // if (document) {
-      //   return { document, userType: "Admin", model: Admin };
-      // }
-
-      document = await TourismGovernor.findById(id);
-      if (document) {
-        return { document, userType: "Tourism Governor", model: TourismGovernor };
-      }
-
-      document = await Advertiser.findById(id);
-      if (document) {
-        return { document, userType: "Advertiser", model: Advertiser };
-      }
-
-      document = await Seller.findById(id);
-      if (document) {
-        return { document, userType: "Seller", model: Seller };
-      }
-
-      document = await TourGuide.findById(id);
-      if (document) {
-        return { document, userType: "Tour Guide", model: TourGuide };
-      }
-
-      document = await Tourist.findById(id);
-      if (document) {
-        return { document, userType: "Tourist", model: Tourist };
-      }
-
-
-      return null; // If no user is found
+    console.log("I deleted from user", correspondingUser)
+    if (!correspondingUser) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const found = await findDocumentById(id);
-
-    if (!found) {
-      return res.status(400).json({ error: "User1 not found" });
+    const role = correspondingUser[0].role;
+    console.log("Role is", role);
+    switch (role) {
+      case "Tour Guide":
+        await TourGuide.findByIdAndDelete(id)
+        break;
+      case "Advertiser":
+        await Advertiser.findByIdAndDelete(id)
+        break;
+      case "Seller":
+        await Seller.findByIdAndDelete(id)
+        break;
+      case "Tourist":
+        await Tourist.findByIdAndDelete(id)
+        break;
+      case "Tourism Governor":
+        await TourismGovernor.findByIdAndDelete(id)
+        break;
+      default:
+        return res.status(400).json({ message: "Invalid role" });
     }
 
-    const { model, userType } = found;
-
-    // Now delete the user
-    const user = await model.findById(id);
-    const user2 = await User.findOne({ userID: id });
-
-    if (!user || !user2) {
-      return res.status(400).json({ error: "User1 not found" });
-    }
-    else {
-      const x = await model.findByIdAndDelete(id);
-      const y = await User.deleteOne({ userID: id });
-      if (!x) {
-        return res.status(404).json({ error: "Error deleting from DocumentModel" });
-
-      }
-      if (!y) {
-        return res.status(404).json({ error: "Error deleting from UserModel" });
-      }
-    }
-
-
-
-    res.status(200).json({ message: `${userType} account deleted successfully` });
+    // Proceed with deleting the user
+    await User.deleteOne({ userId: id });
+    return res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting user account", message: error.message });
+    console.error("Error deleting user:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
 
+
 const getAllUsers = async (req, res) => {
   try {
-    // Use Promise.all to fetch users from all collections concurrently
-    const [admins, governors, sellers, tourGuides, advertisers, tourists] = await Promise.all([
-      Admin.find({}), // Fetch all Admin users
-      TourismGovernor.find({}),
-      Seller.find({}),
-      TourGuide.find({}),
-      Advertiser.find({}),
-      Tourist.find({})
-
-    ]);
-
-    // Combine all user data into one array
-    const allUsers = [
-      // ...admins.map(user => ({ ...user._doc, userType: "Admin" })), 
-      ...governors.map(user => ({ ...user._doc, userType: "Tourism Governor" })),
-      ...sellers.map(user => ({ ...user._doc, userType: "Sellers" })),
-      ...tourGuides.map(user => ({ ...user._doc, userType: "Tour Guides" })),
-      ...advertisers.map(user => ({ ...user._doc, userType: "Advertisers" })),
-      ...tourists.map(user => ({ ...user._doc, userType: "Tourists" })),
-    ];
-
-    // Return the combined user data
+    const allUsers = await User.find({})
     res.status(200).json({ users: allUsers });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
