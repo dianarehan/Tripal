@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, notification } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { createAdmin } from "../../api/AdminService"; // Adjust the path as necessary
 import AdminNavBar from "../../components/admin/AdminNavBar";
 import { message } from 'antd'
@@ -10,11 +10,8 @@ const CreateAdmin = () => {
   const handleSubmit = async () => {
     try {
       const response = await createAdmin(username, password); // Assuming API returns the new admin's username
-      notification.success({
-        message: 'Admin Created',
-        description: `Admin ${response.username} created successfully!`, // Adjust according to your API response
-      });
-      // Clear the input fields after success
+
+      message.success(`Admin ${response.username} created successfully!`)
       setUsername('');
       setPassword('');
       console.log(username);

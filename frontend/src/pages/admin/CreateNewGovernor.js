@@ -12,25 +12,10 @@ const CreateGovernor = () => {
   const handleSubmit = async () => {
     try {
       const response = await createGovernor(username, password);
-      notification.success({
-
-        message: 'Governor Created',
-        description: `Governor ${response.username} created successfully!`, // Adjust according to your API response
-      });
+      message.success(`Governer ${response.userName} created successfully`)
       setUsername(''); // Reset the form
       setPassword('');
     } catch (error) {
-      //   if (error.status === 409) {
-      //     notification.error({
-      //       message: 'Username Taken',
-      //       description: 'The username is already in use. Please choose a different one.',
-      //     });}
-      //     else{
-      //   notification.error({
-      //     message: 'Error',
-      //     description: 'Failed to create governor. Please try again.',
-      //   });
-      // }
       message.error(error.message)
     };
   }

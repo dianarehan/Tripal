@@ -227,7 +227,23 @@ const SignUpAllUsers = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Input placeholder="enter request/user id" />
+      <br></br> <br></br>
+      <Button type="primary" style={{ width: "50%" }}>
+        Create Seller
+      </Button>
+      <br></br> <br></br>
+      <Button type="primary" style={{ width: "50%" }}>
+        Create TourGuide
+      </Button>
+      <br></br> <br></br>
+      <Button type="primary" style={{ width: "50%" }}>
+        Create Advertiser
+      </Button>
+      <br></br> <br></br>
+
     </div>
+
   );
 };
 
