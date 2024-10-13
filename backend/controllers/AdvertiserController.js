@@ -29,10 +29,10 @@ const createAdvertiser = async (req, res) => {
             companyProfile
         });
         const id = advertiser._id
-        await userModel.create({
-            userID: id,
-            role: "Advertiser"
-        })
+        // await userModel.create({
+        //     userID: id,
+        //     role: "Advertiser"
+        // })
         res.status(201).json(advertiser);
     } catch (error) {
         res.status(400).json({ error: error.message });

@@ -25,11 +25,11 @@ const createSeller = async (req, res) => {
             email: email,
             password: hashedPassword
         });
-        const id = sellernew._id
-        await userModel.create({
-            userID: id,
-            role: "Seller"
-        })
+        // const id = sellernew._id
+        // await userModel.create({
+        //     userID: id,
+        //     role: "Seller"
+        // })
         res.status(201).json(sellernew);
 
     } catch (error) {

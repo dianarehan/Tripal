@@ -105,12 +105,13 @@ const acceptRequest = async (req, res) => {
         console.log("Data to create with", object);
         switch (role) {
             case 'Seller':
-                const seller = await Seller.create(object)
+                const seller = await Seller.create(userData);
+                userRole = "Seller";
                 await User.create({
                     userId: seller._id,
                     userName: seller.userName,
                     email: seller.email,
-                    role: "Seller"
+                    role: userRole,
                 });
                 console.log('Handling action for Seller');
                 break;
