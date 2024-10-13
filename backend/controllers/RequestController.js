@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const Request = require("../models/Request.js");
 const User = require('../models/users/User.js')
+const Seller = require('../models/users/Seller.js')
+const TourGuide = require('../models/users/TourGuide.js')
+const Advertiser = require('../models/users/Advertiser.js')
 const createRequest = async (req, res) => {
     const { userName, email, password, role } = req.body;
     try {
@@ -56,7 +59,20 @@ const getRequests = async (req, res) => {
     catch (error) {
         res.status(400).json({ error: error.message });
     }
-}
+};
+const getRequestById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const request = await Request.findById(id);
+        if (!request) {
+            return res.status(404).json({ error: "Request not found" });
+        }
+        return res.status(200).json(request);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
 
 const deleteRequest = async (req, res) => {
     const { id } = req.params;
@@ -69,9 +85,72 @@ const deleteRequest = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+const acceptRequest = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const updatedRequest = await Request.findByIdAndUpdate(id, { status: "accepted" }, { new: true });
+
+        if (!updatedRequest) {
+            return res.status(404).json({ error: "Request not found" });
+        }
+
+        const role = updatedRequest.role
+        console.log("Role", role);
+        const object = {
+            "userName": updatedRequest.userName,
+            "email": updatedRequest.email,
+            "password": updatedRequest.password
+        }
+        console.log("Data to create with", object);
+        switch (role) {
+            case 'Seller':
+                const seller = await Seller.create(object)
+                await User.create({
+                    userId: seller._id,
+                    userName: seller.userName,
+                    email: seller.email,
+                    role: "Seller"
+                });
+                console.log('Handling action for Seller');
+                break;
+
+            case 'Tour Guide':
+                const tourGuide = await TourGuide.create(object)
+                await User.create({
+                    userId: tourGuide._id,
+                    userName: tourGuide.userName,
+                    email: tourGuide.email,
+                    role: "Tour Guide"
+                });
+                break;
+
+            case 'Advertiser':
+                const advertiser = await Advertiser.create(object)
+                await User.create({
+                    userId: advertiser._id,
+                    userName: advertiser.userName,
+                    email: advertiser.email,
+                    role: "Advertiser"
+                });
+                console.log('Handling action for Advertiser');
+
+                break;
+
+
+        }
+
+        return res.status(200).json(updatedRequest);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 
 module.exports = {
     createRequest,
     getRequests,
-    deleteRequest
+    deleteRequest,
+    getRequestById,
+    acceptRequest
 }

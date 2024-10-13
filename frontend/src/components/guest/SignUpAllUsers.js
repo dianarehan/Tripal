@@ -7,11 +7,11 @@ import moment from "moment";
 import { createTourist } from "../../api/TouristService";
 import { nationalities } from "../../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
-import { createRequest } from "../../api/RequestService";
+import { createRequest, acceptRequest } from "../../api/RequestService";
 const { Option } = Select;
 
 const SignUpAllUsers = () => {
-
+  const [requestId, setRequestId] = useState('')
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userName: "",
@@ -22,7 +22,9 @@ const SignUpAllUsers = () => {
     dateOfBirth: "",
     job: "",
   });
-
+  const handleAcceptRequest = () => {
+    acceptRequestFE(requestId);
+  };
   const [role, setRole] = useState("seller");
   const [form] = Form.useForm();
 
@@ -32,7 +34,16 @@ const SignUpAllUsers = () => {
       [name]: value,
     }));
   };
+  const acceptRequestFE = async (RequestID) => {
+    try {
+      const response = await acceptRequest(RequestID);
+      console.log("Request accepted successfully:", response);
+      return response;
+    } catch (error) {
+      console.error("Error accepting request:", error.message);
 
+    }
+  };
   const handleRoleChange = (e) => {
     setRole(e.target.value);
     form.resetFields();
@@ -227,19 +238,16 @@ const SignUpAllUsers = () => {
           </Button>
         </Form.Item>
       </Form>
-      <Input placeholder="enter request/user id" />
+      <Input
+        placeholder="enter request/user id"
+        value={requestId}
+        onChange={(e) => setRequestId(e.target.value)}
+      />
       <br></br> <br></br>
-      <Button type="primary" style={{ width: "50%" }}>
-        Create Seller
+      <Button type="primary" style={{ width: "50%" }} onClick={handleAcceptRequest}>
+        Accept Request
       </Button>
-      <br></br> <br></br>
-      <Button type="primary" style={{ width: "50%" }}>
-        Create TourGuide
-      </Button>
-      <br></br> <br></br>
-      <Button type="primary" style={{ width: "50%" }}>
-        Create Advertiser
-      </Button>
+
       <br></br> <br></br>
 
     </div>
