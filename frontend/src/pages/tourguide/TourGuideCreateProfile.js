@@ -1,32 +1,51 @@
 import { React, useState, useEffect } from 'react';
-import { Form, Input, Button, InputNumber } from 'antd';
+import {  CloseOutlined  } from '@ant-design/icons';
+import {  Button, Card, Form, Input ,InputNumber,DatePicker,Select } from 'antd';
+
 import { createTourGuide, updateProfile, getProfileData } from '../../api/TourGuideService';
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import { toast } from 'react-toastify';
 import TourguideNavBar from '../../components/navbar/TourguideNavBar';
-
+import languages from '../../assets/constants/Languages'
 const TourGuideForm = () => {
   const { id } = useParams();
-  const isUpdate = id;
-  const [form] = Form.useForm();
+  const isUpdate = id===undefined;
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    userName: '',
-    email: '',
-    password: '',
-    mobileNumber: '',
-    experienceYears: 0
-  });
+  const [formData, setFormData] = useState({});
+  //   email: ,
+  //   password: ,
+  //   name: ,
+  //   mobileNumber:,
+  //   nationality: ,
+  //   yearsOfExperience: ,
+  //   languagesSpoken: [],
+  //   education: [
+  //     {
+  //       degree: 
+  //       institution: ,
+  //       yearOfCompletion: 
+  //     }
+  //   ],
+  //   previousWork: [
+  //     {
+  //       companyName: 
+  //       position: 
+  //       location: 
+  //       startDate: 
+  //       endDate: 
+  //       description: 
+  //     }
+  //   ],
+    
+  //   profilePicture: 
+  // }
+
   useEffect(() => {
     const getTourGuideData = async (id) => {
-
       try {
         setLoading(true);
         const profileData = await getProfileData(id);
         const data = await profileData.data;
-        setFormData(data);
-        form.setFieldsValue(data);
-        console.log(data)
         setLoading(false);
       } catch (e) {
         toast.error(e);
@@ -92,102 +111,191 @@ const TourGuideForm = () => {
     console.log(formData);
   }
 
-
+  const [form] = Form.useForm();
+  const { Option } = Select;
   return (
     <div>
       <TourguideNavBar />
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
 
+      <Form
+      labelCol={{
+        span: 6,
+      }}
+      wrapperCol={{
+        span: 18,
+      }}
+      form={form}
+      name="dynamic_form_complex"
+      style={{
+        maxWidth: 600,
+      }}
+      autoComplete="off"
+      initialValues={{
+        items: [{}],
+      }}
+    >
+    
+    <Form.Item
+      label="Name"
+      name="name"
+      rules={[
+        {
+          required: true,
+          message: 'Please input your name!',
+        },
+      ]}
+    >
+      <Input />
+    </Form.Item>
+    <Form.Item
+      label="User Name"
+      name="username"
+      rules={[
+        {
+          required: true,
+          message: 'Please input your name!',
+        },
+      ]}
+    >
+      <Input />
+    </Form.Item>
+    <Form.Item
+      name="Select Languages"
+      label="Select Languages"
+      rules={[
+        {
+          required: true,
+          message: 'Please select your favourite colors!',
+          type: 'array',
+        },
+      ]}
+    >
+      <Select mode="multiple" placeholder="Please select spoken languages">
+  {languages.map((language) => (
+    <Option key={language} value={language}>
+      {language}
+    </Option>
+  ))}
+</Select>
 
-
-        <Form
-          form={form}
-          name="userForm"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          initialValues={{ mobileNumber: '', experienceYears: 0 }}
-          onFinish={onFinish}
-          autoComplete="off"
-        >
-
-          <Form.Item
-            label="name"
-            name="userName"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+    </Form.Item>
+    <Form.List name="items">
+        {(fields, { add, remove }) => (
+          <div
+            style={{
+              display: 'flex',
+              rowGap: 16,
+              flexDirection: 'column',
+            }}
           >
-            <Input
-              type="text"
-              name="userName"
-              value={formData.userName}
-              onChange={handleInputChange}
-              placeholder="Enter Your name"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              { required: true, message: 'Please input your email!' },
-              { type: 'email', message: 'Please enter a valid email!' }
-            ]}
-          >
-            <Input
-              type="text"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Enter Your Email" />
-          </Form.Item>
-
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <Input.Password
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              placeholder="Enter Your password" />
-          </Form.Item>
-
-          <Form.Item
-            label="Mobile Number"
-            name="mobileNumber"
-            rules={[
-              { pattern: /^\d+$/, message: 'Mobile number must be digits only!' }
-            ]}
-          >
-            <Input
-              type="text"
-              name="mobileNumber"
-              value={formData.mobile}
-              onChange={handleInputChange}
-              placeholder="Optional" />
-          </Form.Item>
-
-
-          <Form.Item
-            label="Experience Years"
-            name="experienceYears"
-            rules={[{ type: 'number', min: 0, message: 'Experience must be a non-negative number!' }]}
-          >
-            <InputNumber min={0}
-              value={formData.experienceYears}
-              onChange={(value) => { handleYearsChange('experienceYears', value) }}
-              placeholder="Enter your Experience years"
-              style={{ width: '100%' }} />
-          </Form.Item>
-
-
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              Submit
+            {fields.map((field) => (
+              <Card
+                //size="small"
+                title={`Education ${field.name + 1}`}
+                key={field.key}
+                extra={
+                  <CloseOutlined
+                    onClick={() => {
+                      remove(field.name);
+                    }}
+                  />
+                }
+              >
+                <Form.Item label="Degree" name={[field.name, 'name']}>
+                  <Input style={{
+                        width: '100%',
+                    }}/>
+                </Form.Item>
+                <Form.Item label="Institution" name={[field.name, 'name']}>
+                  <Input style={{
+                        width: '100%',
+                    }} />
+                </Form.Item>
+                <Form.Item label="Year Of Completion">
+                <InputNumber style={{
+                        width: '100%',
+                    }}/>
+                 </Form.Item>
+                
+              </Card>
+            ))}
+            <Button type="dashed" onClick={() => add()} block>
+              + Add Education
             </Button>
-          </Form.Item>
-        </Form>
+          </div>
+        )}
+      </Form.List>
+      <Form.List name="items">
+        {(fields, { add, remove }) => (
+          <div
+            style={{
+              display: 'flex',
+              rowGap: 16,
+              flexDirection: 'column',
+            }}
+          >
+            {fields.map((field) => (
+              <Card
+                //size="small"
+                title={`Previous Work ${field.name + 1}`}
+                key={field.key}
+                extra={
+                  <CloseOutlined
+                    onClick={() => {
+                      remove(field.name);
+                    }}
+                  />
+                }
+              >
+                <Form.Item label="Company Name" name={[field.name, 'name']}>
+                  <Input style={{
+                        width: '100%',
+                    }}/>
+                </Form.Item>
+                <Form.Item label="Position" name={[field.name, 'name']}>
+                  <Input style={{
+                        width: '100%',
+                    }}/>
+                </Form.Item>
+                <Form.Item label="Location" name={[field.name, 'name']}>
+                  <Input style={{
+                        width: '100%',
+                    }} />
+                </Form.Item>
+                <Form.Item label="Start Date">
+          <DatePicker />
+        </Form.Item>
+        <Form.Item label="End date">
+          <DatePicker />
+        </Form.Item>
+                <Form.Item label="Description">
+                <InputNumber style={{
+                        width: '100%',
+                    }}/>
+                 </Form.Item>
+                
+              </Card>
+            ))}
+            <Button type="dashed" onClick={() => add()} block>
+              + Add previous work experience:
+            </Button>
+          </div>
+        )}
+      </Form.List>
+
+      
+    <Form.Item
+      wrapperCol={{
+        offset: 8,
+        span: 16,
+      }}
+    >
+      <Button type="primary" htmlType="submit">
+        Submit
+      </Button>
+    </Form.Item>
+  </Form>
       </div>
     </div>
   );
