@@ -184,6 +184,30 @@ const TourGuideForm = () => {
         >
           <Input />
         </Form.Item>
+        <Form.Item
+          label="Years of Experience"
+          name="years"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your years of experience!',
+            },
+          ]}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item
+          label="Nationality"
+          name="nationality"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your name!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
         <Form.Item
           name="Select Languages"
