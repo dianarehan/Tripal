@@ -2,116 +2,110 @@ import { React, useState, useEffect } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import { Button, Card, Form, Input, InputNumber, DatePicker, Select } from 'antd';
 
-import { createTourGuide, updateProfile, getProfileData } from '../../api/TourGuideService';
+import { updateProfile, getProfileData } from '../../api/TourGuideService';
 import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
 import TourguideNavBar from '../../components/navbar/TourguideNavBar';
-import languages from '../../assets/constants/Languages'
+import languages from '../../assets/constants/Languages';
+import { nationalities } from '../../assets/Nationalities';
+import moment from 'moment';
 const TourGuideForm = () => {
   const { id } = useParams();
-  const isUpdate = id === undefined;
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({});
-  //   email: ,
-  //   password: ,
-  //   name: ,
-  //   mobileNumber:,
-  //   nationality: ,
-  //   yearsOfExperience: ,
-  //   languagesSpoken: [],
-  //   education: [
-  //     {
-  //       degree: 
-  //       institution: ,
-  //       yearOfCompletion: 
-  //     }
-  //   ],
-  //   previousWork: [
-  //     {
-  //       companyName: 
-  //       position: 
-  //       location: 
-  //       startDate: 
-  //       endDate: 
-  //       description: 
-  //     }
-  //   ],
-
-  //   profilePicture: 
-  // }
-
+  const [formData, setFormData] = useState({
+    email: "",
+    name: "",
+    mobileNumber: "",
+    nationality: "",
+    yearsOfExperience: 0,
+    languagesSpoken: [],
+    education: [],
+    previousWork: [],
+    profilePicture: ""
+  });
   useEffect(() => {
-    const getTourGuideData = async (id) => {
+    const getTourGuideData = async () => {
       try {
         setLoading(true);
         const profileData = await getProfileData(id);
         const data = await profileData.data;
         setLoading(false);
+        for (let i = 0; i < data.previousWork.length; i++) {
+          data.previousWork[i].startDate = moment(data.previousWork[i].startDate).isValid() ? moment(data.previousWork[i].startDate) : null;
+          data.previousWork[i].endDate =moment(data.previousWork[i].endDate).isValid() ? moment(data.previousWork[i].endDate) : null;
+          console.log(data.previousWork[i].startDate);
+          console.log(data.previousWork[i].endDate);
+        } 
+  
+        setFormData({
+          email: data?.email || "",
+          name: data?.name || "",
+          mobileNumber: data?.mobileNumber || "",
+          nationality: data?.nationality || "",
+          yearsOfExperience: data?.yearsOfExperience || 0,
+          languagesSpoken: data?.languagesSpoken || [],
+          education: data?.education || [],
+          previousWork: data.previousWork || [],
+          profilePicture: data?.profilePicture || ""
+        });
+        console.log(data);
       } catch (e) {
         toast.error(e);
         setLoading(false);
       }
     };
-    console.log(isUpdate !== null);
-    if (isUpdate !== undefined) { getTourGuideData(id); }
-  }, [isUpdate, id]);
+    getTourGuideData();
+  }, [id]);
 
   const onFinish = async () => {
-    if (isUpdate === undefined) {
-      try {
-        setLoading(true);
-        const result = await createTourGuide(formData);
-        if (result) {
-          setLoading(false);
-          toast.success('profile created successfully')
-          setFormData({
-            userName: '',
-            email: '',
-            password: '',
-            mobileNumber: '',
-            experienceYears: 0
-          });
-
-        }
-      }
-      catch (err) {
-        toast.error(err);
-        setLoading(false);
-      }
-    }
-    else {
-      try {
-        setLoading(true);
-        const result = await updateProfile(id, formData);
+    try {
+      setLoading(true);
+      console.log(formData.previousWork[0].endDate.$d)
+      const date = formData.previousWork[0].endDate;
+      const isoDate = date.toISOString();
+      formData.previousWork = Object.values(formData.previousWork).filter(item => item !== undefined)
+      formData.education = Object.values(formData.education).filter(item => item !== undefined)
+      const result = await updateProfile(id, { ...formData, previousWork: [...formData.previousWork], education: [...formData.education] });
+      console.log(result);
+      if (result) {
         setLoading(false);
         toast.success('profile Updated successfully')
         setFormData({
-          userName: '',
-          email: '',
-          password: '',
-          mobileNumber: '',
-          experienceYears: 0
+          email: "",
+          name: "",
+          mobileNumber: "",
+          nationality: "",
+          yearsOfExperience: 0,
+          languagesSpoken: [],
+          education: [],
+          previousWork: [],
+          profilePicture: ""
         });
 
-
-      }
-      catch (err) {
-        toast.error(err);
-        setLoading(false);
       }
     }
-  }
-  const handleInputChange = (e) => {
-    console.log(e.target.value);
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-  const handleYearsChange = (field, years) => {
-    setFormData({ ...formData, [field]: years });
-    console.log(formData);
+    catch (err) {
+      toast.error(err);
+      setLoading(false);
+    }
+
   }
 
   const [form] = Form.useForm();
+  useEffect(() => {
+    form.setFieldsValue({
+      email: formData.email,
+      name: formData.name,
+      mobileNumber: formData.mobileNumber,
+      yearsOfExperience: formData.yearsOfExperience,
+      nationality: formData.nationality,
+      languagesSpoken: formData.languagesSpoken,
+      education: formData.education,
+      previousWork: formData.previousWork
+
+    });
+    console.log(formData);
+  }, [formData, form]);
   const { Option } = Select;
   return (
     <div>
@@ -119,106 +113,123 @@ const TourGuideForm = () => {
       {/* <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}> */}
 
       <Form
-        labelCol={{
-          span: 6,
-        }}
-        wrapperCol={{
-          span: 18,
-        }}
         form={form}
-        name="dynamic_form_complex"
+        onFinish={onFinish}
         style={{
-          maxWidth: 600,
+          Width: '100%',
         }}
         autoComplete="off"
         initialValues={{
-          items: [{}],
+          email: formData.email,
+          name: formData.name,
+          mobileNumber: formData.mobileNumber,
+          yearsOfExperience: formData.yearsOfExperience,
+          nationality: formData.nationality,
+          languagesSpoken: formData.languagesSpoken,
+          education: formData.education,
+          previousWork: formData.previousWork
+
+        }}
+        onValuesChange={(changedValues, allValues) => {
+          console.log("changedValues: ", changedValues)
+          setFormData((oldData) =>
+          ({
+            ...oldData, ...changedValues, education: allValues.education,
+            previousWork: {
+              ...allValues.previousWork,
+              startDate: allValues?.previousWork?.startDate?.toISOString(),
+              endDate: allValues?.previousWork?.endDate?.toISOString()
+            }
+          }));
+          console.log("from onvalueChanges", formData);
         }}
       >
+        <Form.Item
+          label="Email"
+          name='email'
+          rules={[
+            {
+              required: formData.email === "",
+              type: 'email',
+              message: 'Please enter your email'
+            },
+          ]}
+        >
+          <Input style={{ width: '100%' }}
+            placeholder="Enter your email"
+
+
+          />
+        </Form.Item>
 
         <Form.Item
+          name='name'
           label="Name"
-          name="name"
           rules={[
             {
-              required: true,
+              required: formData.name === "",
               message: 'Please input your name!',
             },
           ]}
         >
-          <Input />
+          <Input
+            type='text'
+            placeholder="Enter your name"
+            style={{ width: '100%' }} />
         </Form.Item>
-        <Form.Item
-          label="User Name"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your name!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+
         <Form.Item
           label="Phone Number"
-          name="phone Number"
+          name='mobileNumber'
           rules={[
             {
-              required: true,
-              message: 'Please input your name!',
+              required: formData.mobileNumber === "",
+              message: 'Please input your mobile number!',
             },
           ]}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Nationality"
-          name="nationality"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your name!',
-            },
-          ]}
-        >
-          <Input />
+          <Input
+            type='text'
+            placeholder="Enter your mobile number"
+            style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           label="Years of Experience"
-          name="years"
+          name="yearsOfExperience"
           rules={[
             {
-              required: true,
+              required: formData.yearsOfExperience === 0,
               message: 'Please input your years of experience!',
             },
           ]}
         >
-          <InputNumber />
+          <InputNumber
+            
+            placeholder="Enter experience years"
+            style={{ width: '100%' }} />
         </Form.Item>
-        <Form.Item
-          label="Nationality"
-          name="nationality"
+        <Form.Item name='nationality' label="Nationality"
           rules={[
             {
-              required: true,
-              message: 'Please input your name!',
+              required: formData.nationality === '',
+              message: 'Please select your nationality!',
+            },
+          ]}>
+          <Select>
+            {nationalities.map((nationality) => (
+              <Select.Option value={nationality}>{nationality}</Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="languagesSpoken"
+          label="Select Languages"
+          rules={[
+            {
+              required: formData.languagesSpoken?.length === 0,
+              message: 'Please select your languages!',
             },
           ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          name="Select Languages"
-          label="Select Languages"
-        // rules={[
-        //   {
-        //     required: true,
-        //     message: 'Please select your spoken languages !',
-        //     type: 'array',
-        // //   },
-        // ]}
         >
           <Select mode="multiple" placeholder="Please select spoken languages">
             {languages.map((language) => (
@@ -229,8 +240,8 @@ const TourGuideForm = () => {
           </Select>
 
         </Form.Item>
-        <Form.List name="items">
-          {(fields, { add, remove }) => (
+        <Form.List name="education">
+          {(fields, { add: addEducation, remove: removeEducation }) => (
             <div
               style={{
                 display: 'flex',
@@ -240,28 +251,45 @@ const TourGuideForm = () => {
             >
               {fields.map((field) => (
                 <Card
-                  //size="small"
                   title={`Education ${field.name + 1}`}
                   key={field.key}
                   extra={
                     <CloseOutlined
                       onClick={() => {
-                        remove(field.name);
+                        removeEducation(field.name);
                       }}
                     />
                   }
                 >
-                  <Form.Item label="Degree" name={[field.name, 'name']}>
+                  <Form.Item label="Degree" name={[field.name, 'degree']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your degree!',
+                      },
+                    ]}>
                     <Input style={{
                       width: '100%',
                     }} />
                   </Form.Item>
-                  <Form.Item label="Institution" name={[field.name, 'name']}>
+                  <Form.Item label="Institution" name={[field.name, 'institution']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your institution!',
+                      },
+                    ]}>
                     <Input style={{
                       width: '100%',
                     }} />
                   </Form.Item>
-                  <Form.Item label="Year Of Completion">
+                  <Form.Item label="Year Of Completion" name={[field.name, 'yearOfCompletion']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your Year Of Completion!',
+                      },
+                    ]}>
                     <InputNumber style={{
                       width: '100%',
                     }} />
@@ -269,14 +297,14 @@ const TourGuideForm = () => {
 
                 </Card>
               ))}
-              <Button type="dashed" onClick={() => add()} block>
+              <Button type="dashed" onClick={() => addEducation()} block>
                 + Add Education
               </Button>
             </div>
           )}
         </Form.List>
-        <Form.List name="items">
-          {(fields, { add, remove }) => (
+        <Form.List name="previousWork">
+          {(fields, { add: addPrevWork, remove: removePrevWork }) => (
             <div
               style={{
                 display: 'flex',
@@ -286,48 +314,83 @@ const TourGuideForm = () => {
             >
               {fields.map((field) => (
                 <Card
-                  //size="small"
                   title={`Previous Work ${field.name + 1}`}
                   key={field.key}
                   extra={
                     <CloseOutlined
                       onClick={() => {
-                        remove(field.name);
+                        removePrevWork(field.name);
                       }}
                     />
                   }
                 >
-                  <Form.Item label="Company Name" name={[field.name, 'name']}>
+                  <Form.Item label="Company Name" name={[field.name, 'companyName']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your company name!',
+                      },
+                    ]}>
                     <Input style={{
                       width: '100%',
                     }} />
                   </Form.Item>
-                  <Form.Item label="Position" name={[field.name, 'name']}>
+                  <Form.Item label="Position" name={[field.name, 'position']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your position!',
+                      },
+                    ]}>
                     <Input style={{
                       width: '100%',
                     }} />
                   </Form.Item>
-                  <Form.Item label="Location" name={[field.name, 'name']}>
+                  <Form.Item label="Location" name={[field.name, 'location']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter company location!',
+                      },
+                    ]}>
                     <Input style={{
                       width: '100%',
                     }} />
                   </Form.Item>
-                  <Form.Item label="Start Date">
-                    <DatePicker />
+                  <Form.Item label="Start Date" name={[field.name, 'startDate']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter working start date !',
+                      },
+                    ]}>
+                    <DatePicker style={{ width: '100%' }} />
                   </Form.Item>
-                  <Form.Item label="End date">
-                    <DatePicker />
+                  <Form.Item label="End date" name={[field.name, 'endDate']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter working end date!',
+                      },
+                    ]}>
+                    <DatePicker style={{ width: '100%' }} />
                   </Form.Item>
-                  <Form.Item label="Description">
-                    <InputNumber style={{
+                  <Form.Item label="Description" name={[field.name, 'description']}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your job description!',
+                      },
+                    ]}>
+                    <Input.TextArea style={{
                       width: '100%',
                     }} />
                   </Form.Item>
 
                 </Card>
               ))}
-              <Button type="dashed" onClick={() => add()} block>
-                + Add previous work experience:
+              <Button type="dashed" onClick={() => addPrevWork()} block>
+                + Add previous work experience
               </Button>
             </div>
           )}
@@ -335,12 +398,8 @@ const TourGuideForm = () => {
 
 
         <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
         >
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
             Submit
           </Button>
         </Form.Item>

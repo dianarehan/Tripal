@@ -54,7 +54,7 @@ const getTourguideInfo = async (req, res) => {
 const updateTourguideData = async (req, res) => {
     try {
         const { id } = req.params;
-
+        console.log(req.body);
 
 
         const updatedTourGuide = await tourGuideModel.findByIdAndUpdate(
