@@ -22,7 +22,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
     website: advertiser?.website || "",
     hotline: advertiser?.hotline || "",
     companyProfile: {
-      logo: advertiser?.companyProfile?.logo || null,
+      logo: advertiser?.companyProfile?.logo || "",
       companyName: advertiser?.companyProfile?.companyName || "",
       industry: advertiser?.companyProfile?.industry || "",
       description: advertiser?.companyProfile?.description || "",
@@ -41,6 +41,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
       awards: advertiser?.companyProfile?.awards || [],
     },
     existingImage: advertiser?.companyProfile?.logo || null,
+    currentLogo: advertiser?.companyProfile?.logo || null,
   });
 
   const [error, setError] = useState("");
@@ -159,9 +160,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
     if (info.fileList.length === 0) {
       setFormData((prevData) => ({
         ...prevData,
-        // Callback when the file is done being read. Sets the logo on the
-        // company profile to the result of the file read operation.
-        companyProfile: { ...prevData.companyProfile, logo: null },
+        currentLogo: null,
       }));
       return;
     }
@@ -172,7 +171,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
       reader.onload = () => {
         setFormData((prevData) => ({
           ...prevData,
-          companyProfile: { ...prevData.companyProfile, logo: reader.result },
+          currentLogo: reader.result,
         }));
       };
       reader.readAsDataURL(file);
@@ -180,7 +179,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   };
 
   const handleBeforeUpload = (file) => {
-    if (formData.companyProfile.logo) {
+    if (formData.currentLogo) {
       message.error("Only one logo can be uploaded.");
       return Upload.LIST_IGNORE;
     }
@@ -188,7 +187,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
     reader.onload = () => {
       setFormData((prevData) => ({
         ...prevData,
-        companyProfile: { ...prevData.companyProfile, logo: reader.result },
+        currentLogo: reader.result,
       }));
     };
     reader.readAsDataURL(file);
@@ -198,7 +197,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   const handleRemove = () => {
     setFormData((prevData) => ({
       ...prevData,
-      companyProfile: { ...prevData.companyProfile, logo: null },
+      currentLogo: null,
     }));
   };
 
@@ -211,8 +210,8 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
         const advertiserData = { ...formData };
 
         // Only include the logo if it has been changed
-        if (formData.companyProfile.logo === formData.existingImage) {
-          advertiserData.companyProfile.logo = null;
+        if (formData.currentLogo === formData.existingImage) {
+          advertiserData.currentLogo = null;
           advertiserData.existingImage = null;
         }
         await updateAdvertiser(id, advertiserData);
@@ -234,293 +233,299 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   return (
     <>
       <AdvertiserNavBar />
-      <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
-
-      <form className="form-container" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>User Name:</label>
-          <input
-            type="text"
-            name="userName"
-            value={formData.userName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Website:</label>
-          <input
-            type="url"
-            name="website"
-            value={formData.website}
-            onChange={handleChange}
-            placeholder="Enter your website URL"
-          />
-        </div>
-        <div className="form-group">
-          <label>Hotline:</label>
-          <input
-            type="tel"
-            name="hotline"
-            value={formData.hotline}
-            onChange={handleChange}
-            placeholder="Enter your hotline number"
-          />
-        </div>
-
-        <div>
-          <h3>Company Profile</h3>
+      <div
+        class="dashboard__content_content"
+        style={{ backgroundColor: "#f0f0f0" }}
+      >
+        <form className="form-container" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Company Name:</label>
+            <label>User Name:</label>
             <input
               type="text"
-              name="companyProfile.companyName"
-              value={formData.companyProfile.companyName}
+              name="userName"
+              value={formData.userName}
               onChange={handleChange}
-              placeholder="Enter company name"
+              required
             />
           </div>
           <div className="form-group">
-            <label>Industry:</label>
+            <label>Email:</label>
             <input
-              type="text"
-              name="companyProfile.industry"
-              value={formData.companyProfile.industry}
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
-              placeholder="Enter Industry"
+              required
             />
           </div>
           <div className="form-group">
-            <label>Description:</label>
-            <textarea
-              name="companyProfile.description"
-              value={formData.companyProfile.description}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Founded Year:</label>
+            <label>Password:</label>
             <input
-              type="text"
-              name="companyProfile.foundedYear"
-              value={formData.companyProfile.foundedYear}
+              type="password"
+              name="password"
+              value={formData.password}
               onChange={handleChange}
-            />
-          </div>
-          {error && <p className="error-message">{error}</p>}
-
-          <div className="form-group">
-            <label>Employees:</label>
-            <input
-              type="text"
-              name="companyProfile.employees"
-              value={formData.companyProfile.employees}
-              onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
-            <label>Headquarters Address:</label>
-            <input
-              type="text"
-              name="companyProfile.headquarters.address"
-              value={formData.companyProfile.headquarters.address}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>City:</label>
-            <input
-              type="text"
-              name="companyProfile.headquarters.city"
-              value={formData.companyProfile.headquarters.city}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Country:</label>
-            <input
-              type="text"
-              name="companyProfile.headquarters.country"
-              value={formData.companyProfile.headquarters.country}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div>
-          <h4>Social Media</h4>
-          <div className="form-group">
-            <label>LinkedIn:</label>
+            <label>Website:</label>
             <input
               type="url"
-              name="companyProfile.socialMedia.linkedin"
-              value={formData.companyProfile.socialMedia.linkedin}
+              name="website"
+              value={formData.website}
               onChange={handleChange}
-              placeholder="Enter LinkedIn profile URL"
+              placeholder="Enter your website URL"
             />
           </div>
           <div className="form-group">
-            <label>Twitter:</label>
+            <label>Hotline:</label>
             <input
-              type="url"
-              name="companyProfile.socialMedia.twitter"
-              value={formData.companyProfile.socialMedia.twitter}
+              type="tel"
+              name="hotline"
+              value={formData.hotline}
               onChange={handleChange}
-              placeholder="Enter Twitter profile URL"
+              placeholder="Enter your hotline number"
             />
           </div>
-        </div>
 
-        {/* Certifications and Awards */}
-        <div>
-          <h4>Certifications</h4>
-          {formData.companyProfile.certifications.map((cert, index) => (
-            <div key={index} className="cert-award-container">
+          <div>
+            <h3>Company Profile</h3>
+            <div className="form-group">
+              <label>Company Name:</label>
               <input
                 type="text"
-                value={cert || ''}
-                onChange={(e) =>
-                handleItemChange(e, index, "", "certifications")
-                }
-                placeholder="Enter certification"
+                name="companyProfile.companyName"
+                value={formData.companyProfile.companyName}
+                onChange={handleChange}
+                placeholder="Enter company name"
               />
-              <button
-                type="button"
-                className="remove-button"
-                onClick={() => handleRemoveItem(index, "certifications")}
-              >
-                Remove
-              </button>
             </div>
-          ))}
-          <button
-            type="button"
-            className="add-button"
-            onClick={() => handleAddItem("certifications")}
-          >
-            Add Certification
-          </button>
-        </div>
-
-        {/* Awards Section */}
-        <div>
-          <h4>Awards</h4>
-          {formData.companyProfile.awards.map((award, index) => (
-            <div key={index} className="cert-award-container">
+            <div className="form-group">
+              <label>Industry:</label>
               <input
                 type="text"
-                name={`companyProfile.awards[${index}].title`}
-                value={award.title}
-                onChange={(e) => handleItemChange(e, index, "title", "awards")} // Specify 'title' for the awards field
-                placeholder="Award Title"
+                name="companyProfile.industry"
+                value={formData.companyProfile.industry}
+                onChange={handleChange}
+                placeholder="Enter Industry"
               />
-              <input
-                type="number"
-                name={`companyProfile.awards[${index}].year`}
-                value={award.year || ""} // Handle undefined case for year
-                onChange={(e) => handleItemChange(e, index, "year", "awards")} // Specify 'year' for the awards field
-                placeholder="Year"
-              />
-              <input
-                type="text"
-                name={`companyProfile.awards[${index}].issuer`}
-                value={award.issuer || ""} // Handle undefined case for issuer
-                onChange={(e) => handleItemChange(e, index, "issuer", "awards")} // Specify 'issuer' for the awards field
-                placeholder="Issuer"
-              />
-              <button
-                type="button"
-                className="remove-button"
-                onClick={() => handleRemoveItem(index, "awards")}
-              >
-                Remove
-              </button>
             </div>
-          ))}
-          <button
-            type="button"
-            className="add-button"
-            onClick={() => handleAddItem("awards")}
-          >
-            Add Award
-          </button>
-        </div>
+            <div className="form-group">
+              <label>Description:</label>
+              <textarea
+                name="companyProfile.description"
+                value={formData.companyProfile.description}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Founded Year:</label>
+              <input
+                type="text"
+                name="companyProfile.foundedYear"
+                value={formData.companyProfile.foundedYear}
+                onChange={handleChange}
+              />
+            </div>
+            {error && <p className="error-message">{error}</p>}
 
-        <div className="form-group">
-          <label>Logo:</label>
-          <Upload
-            name="logo"
-            listType="picture"
-            accept=".png,.jpeg,.jpg"
-            beforeUpload={handleBeforeUpload} // Prevent multiple uploads
-            onChange={handleLogoChange}
-            onRemove={handleRemove} // Allow removal of the logo
-            fileList={
-              formData.companyProfile.logo
-                ? [
-                    {
-                      uid: "-1",
-                      name: "logo.png",
-                      status: "done",
-                      url: formData.companyProfile.logo,
-                    },
-                  ]
-                : []
-            } // Ensure only one file is shown
-          >
-            {!formData.companyProfile.logo && (
-              <Button
-                icon={<UploadOutlined />}
-                size="small"
-                type="default"
-                style={{
-                  whiteSpace: "nowrap",
-                  padding: "0 8px",
-                  width: "auto",
-                }}
-              >
-                Upload Logo
-              </Button>
-            )}
-          </Upload>
-          {formData.companyProfile.logo && (
-            <img
-              src={formData.companyProfile.logo}
-              alt="Company Logo"
-              className="company-logo-preview"
-            />
-          )}{" "}
-          {/* Display logo preview if present */}
-        </div>
+            <div className="form-group">
+              <label>Employees:</label>
+              <input
+                type="text"
+                name="companyProfile.employees"
+                value={formData.companyProfile.employees}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Headquarters Address:</label>
+              <input
+                type="text"
+                name="companyProfile.headquarters.address"
+                value={formData.companyProfile.headquarters.address}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>City:</label>
+              <input
+                type="text"
+                name="companyProfile.headquarters.city"
+                value={formData.companyProfile.headquarters.city}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Country:</label>
+              <input
+                type="text"
+                name="companyProfile.headquarters.country"
+                value={formData.companyProfile.headquarters.country}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
 
-        <div className="button-group">
-          <button type="submit" className="submit-button" disabled={loading}>
-            {loading ? "Submitting..." : isUpdate ? "Update" : "Submit"}
-          </button>
-        </div>
+          <div>
+            <h4>Social Media</h4>
+            <div className="form-group">
+              <label>LinkedIn:</label>
+              <input
+                type="url"
+                name="companyProfile.socialMedia.linkedin"
+                value={formData.companyProfile.socialMedia.linkedin}
+                onChange={handleChange}
+                placeholder="Enter LinkedIn profile URL"
+              />
+            </div>
+            <div className="form-group">
+              <label>Twitter:</label>
+              <input
+                type="url"
+                name="companyProfile.socialMedia.twitter"
+                value={formData.companyProfile.socialMedia.twitter}
+                onChange={handleChange}
+                placeholder="Enter Twitter profile URL"
+              />
+            </div>
+          </div>
 
-        {success && <p className="success-message">{success}</p>}
-      </form>
+          {/* Certifications and Awards */}
+          <div>
+            <h4>Certifications</h4>
+            {formData.companyProfile.certifications.map((cert, index) => (
+              <div key={index} className="cert-award-container">
+                <input
+                  type="text"
+                  value={cert || ""}
+                  onChange={(e) =>
+                    handleItemChange(e, index, "", "certifications")
+                  }
+                  placeholder="Enter certification"
+                />
+                <button
+                  type="button"
+                  className="remove-button"
+                  onClick={() => handleRemoveItem(index, "certifications")}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-button"
+              onClick={() => handleAddItem("certifications")}
+            >
+              Add Certification
+            </button>
+          </div>
+
+          {/* Awards Section */}
+          <div>
+            <h4>Awards</h4>
+            {formData.companyProfile.awards.map((award, index) => (
+              <div key={index} className="cert-award-container">
+                <input
+                  type="text"
+                  name={`companyProfile.awards[${index}].title`}
+                  value={award.title}
+                  onChange={(e) =>
+                    handleItemChange(e, index, "title", "awards")
+                  } // Specify 'title' for the awards field
+                  placeholder="Award Title"
+                />
+                <input
+                  type="number"
+                  name={`companyProfile.awards[${index}].year`}
+                  value={award.year || ""} // Handle undefined case for year
+                  onChange={(e) => handleItemChange(e, index, "year", "awards")} // Specify 'year' for the awards field
+                  placeholder="Year"
+                />
+                <input
+                  type="text"
+                  name={`companyProfile.awards[${index}].issuer`}
+                  value={award.issuer || ""} // Handle undefined case for issuer
+                  onChange={(e) =>
+                    handleItemChange(e, index, "issuer", "awards")
+                  } // Specify 'issuer' for the awards field
+                  placeholder="Issuer"
+                />
+                <button
+                  type="button"
+                  className="remove-button"
+                  onClick={() => handleRemoveItem(index, "awards")}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-button"
+              onClick={() => handleAddItem("awards")}
+            >
+              Add Award
+            </button>
+          </div>
+
+          <div className="form-group">
+            <label>Logo:</label>
+            <Upload
+              name="logo"
+              listType="picture"
+              accept=".png,.jpeg,.jpg"
+              beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+              onChange={handleLogoChange}
+              onRemove={handleRemove} // Allow removal of the logo
+              fileList={
+                formData.currentLogo
+                  ? [
+                      {
+                        uid: "-1",
+                        name: "logo.png",
+                        status: "done",
+                        url: formData.logo,
+                      },
+                    ]
+                  : []
+              } // Ensure only one file is shown
+            >
+              {!formData.currentLogo && (
+                <Button
+                  icon={<UploadOutlined />}
+                  size="small"
+                  type="default"
+                  style={{
+                    whiteSpace: "nowrap",
+                    padding: "0 8px",
+                    width: "auto",
+                  }}
+                >
+                  Upload Logo
+                </Button>
+              )}
+            </Upload>
+            {formData.currentLogo && (
+              <img
+                src={formData.currentLogo}
+                alt="Company Logo"
+                className="company-logo-preview"
+              />
+            )}{" "}
+            {/* Display logo preview if present */}
+          </div>
+
+          <div className="button-group">
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading ? "Submitting..." : isUpdate ? "Update" : "Submit"}
+            </button>
+          </div>
+
+          {success && <p className="success-message">{success}</p>}
+        </form>
       </div>
     </>
   );

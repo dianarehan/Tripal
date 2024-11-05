@@ -61,7 +61,9 @@ const updateAdvertiser = async (req, res) => {
       hotline,
       companyProfile,
       existingImage,
+      currentLogo, //new logo to be uploaded
     } = req.body;
+
     const existingAdvertiser = await advertiserModel.findById(req.params.id);
     if (!existingAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
@@ -78,10 +80,7 @@ const updateAdvertiser = async (req, res) => {
       password: hashedPassword,
       website,
       hotline,
-      companyProfile: {
-        ...existingAdvertiser.companyProfile.toObject(), // Preserve existing fields
-        ...companyProfile, // Overwrite with new data
-      },
+      companyProfile,
     };
 
     // Delete old logo if it exists
@@ -93,15 +92,16 @@ const updateAdvertiser = async (req, res) => {
           .join("/")
           .split(".")[0];
         await cloudinary.uploader.destroy(oldLogoPublicId);
+        updateData.companyProfile.logo = "";
       } catch (error) {
         return res.status(500).json({ error: "Failed to delete old logo" });
       }
     }
 
-    if (companyProfile.logo) {
+    if (currentLogo) {
       // Upload new logo
       try {
-        const result = await cloudinary.uploader.upload(companyProfile.logo, {
+        const result = await cloudinary.uploader.upload(currentLogo, {
           folder: "companyLogos",
         });
         updateData.companyProfile.logo = result.secure_url;

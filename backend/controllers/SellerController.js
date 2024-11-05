@@ -68,7 +68,7 @@ const updateSellerData = asyncHandler(async (req, res) => {
   if (logo) {
     try {
       result = await cloudinary.uploader.upload(logo, {
-        folder: "logos",
+        folder: "sellerLogos",
       });
     } catch (error) {
       return res.status(500).json({ error: "Failed to upload new logo" });
