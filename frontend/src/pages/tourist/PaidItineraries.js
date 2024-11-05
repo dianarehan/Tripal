@@ -13,8 +13,8 @@ const PaidItinerariesPage = () => {
     const [filteredItineraries, setFilteredItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currency, setCurrency] = useState("EGP"); // Add currency state
-    const [exchangeRate, setExchangeRate] = useState(1); // Add exchange rate state
+    const [currency, setCurrency] = useState("EGP"); 
+    const [exchangeRate, setExchangeRate] = useState(1);
 
     useEffect(() => {
         const curr = sessionStorage.getItem("currency");
@@ -97,7 +97,7 @@ const PaidItinerariesPage = () => {
 
         const filtered = itineraries.filter(itinerary => {
             const itineraryDates = itinerary.availableDates.map(date => new Date(date));
-            const itineraryBudget = itinerary.price * exchangeRate; // Convert budget using exchange rate
+            const itineraryBudget = itinerary.price * exchangeRate;
             const itineraryLanguage = itinerary.language;
 
             const start = startDate ? new Date(startDate) : null;

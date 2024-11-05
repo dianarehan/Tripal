@@ -47,6 +47,26 @@ const bookResource = async (req, res) => {
         else
             resource.tourists.push(touristId);
         await resource.save();
+
+        let pointsToReceive=0;
+            if(tourist.totalPoints<=100000){
+                pointsToReceive=resource.price*0.5;
+            }else if(tourist.totalPoints<=500000){
+                pointsToReceive=resource.price*1;
+            } else {
+                pointsToReceive=resource.price*1.5;
+            }
+
+            await Tourist.findByIdAndUpdate(
+                touristId,
+                {
+                    $inc: {
+                        totalPoints: pointsToReceive,
+                        currentPoints: pointsToReceive,
+                    },
+                },
+                { new: true }
+            );
     
         res.status(200).json({ message: `${resourceType} booked successfully` });
         } catch (error) {
@@ -87,6 +107,30 @@ try {
 
         }
     await resource.save();
+
+    const tourist = await Tourist.findById(touristId);
+        if (!tourist) 
+            return res.status(404).json({ error: 'Tourist not found' });
+
+    let pointsToDecrement=0;
+    if(tourist.totalPoints<=100000){
+        pointsToDecrement=resource.price*0.5;
+    }else if(tourist.totalPoints<=500000){
+        pointsToDecrement=resource.price*1;
+    } else {
+        pointsToDecrement=resource.price*1.5;
+    }
+
+    await Tourist.findByIdAndUpdate(
+        touristId,
+        {
+            $inc: {
+                totalPoints: -pointsToDecrement,
+                currentPoints: -pointsToDecrement,
+            },
+        },
+        { new: true }
+    );
 
     res.status(200).json({ message: `${resourceType} booking canceled successfully` });
 } catch (error) {
