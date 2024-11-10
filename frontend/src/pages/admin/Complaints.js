@@ -4,7 +4,6 @@ import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToCompl
 import { adminId } from "../../IDs";
 import { OrderedListOutlined } from '@ant-design/icons';
 import { checkTouristExists } from "../../api/TouristService";
-import { message } from "antd";
 import { message, Dropdown, Menu } from "antd";
 
 const ComplaintsPage = () => {
@@ -135,7 +134,6 @@ const ComplaintsPage = () => {
             }
         }
     };
-    const [isSorted, setIsSorted] = useState(false); // initial sorting state (e.g., false for ascending, true for descending)
 
 
     const items = [
