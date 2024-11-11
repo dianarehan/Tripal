@@ -104,7 +104,7 @@ export default function DbBooking() {
                                 <td>{flight.airline}</td>
                                 <td>{flight.origin}</td>
                                 <td>{flight.destination}</td>
-                                <td>{flight.price} {flight.currency}</td>
+                                <td>{Number(flight.price).toFixed(2)} {flight.currency}</td>
                                 <td>{new Date(flight.departureTime).toLocaleString()}</td>
                                 <td>{new Date(flight.arrivalTime).toLocaleString()}</td>
                                 <td>
@@ -161,7 +161,7 @@ export default function DbBooking() {
                                 <td>{hotel.cityCode}</td>
                                 <td>{format(hotel.checkIn, 'M/d/yyyy, h:mm:ss a')}</td>
                                 <td>{format(hotel.checkOut, 'M/d/yyyy, h:mm:ss a')}</td>
-                                <td>{hotel.pricing} EGP</td>
+                                <td>{Number(hotel.pricing).toFixed(2)} {bookedFlights[0].currency}</td>
                                 <td>
                                   <div className={`circle ${getHotelStatus(hotel.checkOut) === "completed" ? "text-purple-1" : "text-yellow-1"}`}>
                                     {getHotelStatus(hotel.checkOut)}

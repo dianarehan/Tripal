@@ -347,7 +347,7 @@ const TouristHomePage = () => {
                   type="text"
                   name="walletBalance"
                   value={
-                    profileInformation.wallet.amount +
+                    profileInformation.wallet.amount.toFixed(2) +
                     " " +
                     profileInformation.wallet.currency
                   }
