@@ -9,12 +9,12 @@ import ResetPassword from "@/pages/pages/login/ResetPassword";
 import Itineraries from "../pages/commonPagesForMultipleUsers/Itineraries";
 import PendingPage from "@/pages/commonPagesForMultipleUsers/PendingRequest";
 import RegisterPage from "../pages/pages/register";
-import TourList1 from "@/pages/BookingHotels/HotelListGuest";
+import TourList1 from "../pages/BookingHotels/HotelList";
 
 const guestRoutes = [
   { path: "/", element: <HomePage5 /> },
   { path: "/login", element: <LoginPage /> },
-  { path: "/guest/hotelList/:cityCode/:dates1/:dates2", element: <TourList1 />, },
+  {path: "/guest/hotelList/:cityCode/:dates1/:dates2",element: <TourList1 />,},
   { path: "/activities/:activityId", element: <ActivityDetailsPage /> },
   { path: "/upcomingactivities", element: <Activities /> },
   { path: "/historicalPlaces", element: <HistoricalPlaces /> },
