@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 function Info({ cart, currency, exchangeRate, promo }) {
-  // Calculate totals with currency conversion
   const totalPrice = cart
     .reduce((total, item) => total + item.price * exchangeRate, 0)
     .toFixed(2);

@@ -51,8 +51,8 @@ export default function TourList1() {
         title: hotel.name,
         location: hotel.iataCode,
         description: "A beautiful hotel for a remarkable holiday.",
-        price: 10000,
-        fromPrice: 15000,
+        // price: 10000,
+        // fromPrice: 15000,
         features: [
           {
             icon: `icon-price-tag`,
@@ -257,12 +257,12 @@ export default function TourList1() {
                               className="tourCard__price"
                               style={{ cursor: "default" }}
                             >
-                              <div>
+                              {/* <div>
                                 {currency || "EGP"}{" "}
                                 {(elm.fromPrice * exchangeRate).toFixed(2)}
-                              </div>
+                              </div> */}
 
-                              <div className="d-flex items-center">
+                              {/* <div className="d-flex items-center">
                                 From{" "}
                                 <span
                                   className="text-20 fw-500 ml-5"
@@ -271,7 +271,7 @@ export default function TourList1() {
                                   {currency || "EGP"}{" "}
                                   {(elm.price * exchangeRate).toFixed(2)}
                                 </span>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
 

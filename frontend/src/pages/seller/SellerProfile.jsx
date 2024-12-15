@@ -5,16 +5,11 @@ import MetaComponent from "@/components/common/MetaComponent";
 import SellerHeader from "@/components/layout/header/SellerHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import { requestAccountDeletion } from "../../api/RequestService";
-import { Form, Button, message, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-//import { changeTouristPassword } from '../../api/TouristService';
+import { Form, message, Upload } from "antd";
 import { getUserData } from "@/api/UserService";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-
 import Spinner from "@/components/common/Spinner";
 import { changeSellerPassword, getSellerDetails, updateSeller } from "@/api/SellerService";
-
-import { logout } from "@/api/UserService";
 
 const metadata = {
   title: "Profile || Tripal",
@@ -25,7 +20,7 @@ export default function Profile() {
   const [userRole, setUserRole] = useState("");
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [profileInformation, setProfileInformation] = useState({});
-  const [initialLogo, setInitialLogo] = useState(""); // State to store the initial logo
+  const [initialLogo, setInitialLogo] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -92,15 +87,8 @@ export default function Profile() {
         return;
       }
 
-      console.log("user", userData);
-      console.log(
-        "old pass, new pass",
-        PasswordForm.oldPassword,
-        PasswordForm.newPassword
-      );
       await changeSellerPassword(PasswordForm.oldPassword, PasswordForm.newPassword);
       message.success("Password changed successfully");
-
 
     } catch (error) {
       message.error(
@@ -114,7 +102,6 @@ export default function Profile() {
       await updateSeller(editedProfile);
       message.success("Profile updated successfully");
     } catch (error) {
-      console.error("Failed to update user information:", error);
       message.error("Failed to update profile");
     }
   };
@@ -124,7 +111,6 @@ export default function Profile() {
       const response = await getSellerDetails();
 
       setProfileInformation(response.data);
-      // console.log("profileinfo", profileInformation);
       setEditedProfile({
         email: response.data.email,
         description: response.data.description,
@@ -133,7 +119,6 @@ export default function Profile() {
       setInitialLogo(response.data.logo || "");
       setLoading(false);
     } catch (error) {
-      console.error("Failed to fetch user information000:", error);
       setLoading(false);
     }
   };
@@ -271,9 +256,9 @@ export default function Profile() {
                           name="logo"
                           listType="picture"
                           accept=".png,.jpeg,.jpg"
-                          beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+                          beforeUpload={handleBeforeUpload}
                           onChange={handleLogoChange}
-                          onRemove={handleRemove} // Allow removal of the logo
+                          onRemove={handleRemove}
                           fileList={
                             editedProfile.logo
                               ? [
@@ -285,7 +270,7 @@ export default function Profile() {
                                 },
                               ]
                               : []
-                          } // Ensure only one file is shown
+                          }
                         >
                           {editedProfile.logo ? (
                             <div className="uploaded-image-container">
@@ -313,8 +298,6 @@ export default function Profile() {
                           )}
                         </Upload>
                       </div>
-
-                      {/* end logo */}
                     </Form.Item>
 
                     <div className="col-12">

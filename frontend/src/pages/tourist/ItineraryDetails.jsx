@@ -51,9 +51,7 @@ const ItineraryDetailsPage = () => {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          //setUserId(response.data.id);
         } else {
-          // message.error(response.data.message);
           setUserRole("Guest");
         }
       } catch (error) {

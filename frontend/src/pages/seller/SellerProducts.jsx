@@ -1,4 +1,3 @@
-import React from "react";
 import ProductList from "../../components/product/ProductList";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import SellerHeader from "@/components/layout/header/SellerHeader";

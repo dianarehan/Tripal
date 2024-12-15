@@ -442,7 +442,6 @@ export default function Checkout(props) {
               </p>
             </div>
           </Modal>
-
           <Footer />
         </main>
       </AppTheme>
