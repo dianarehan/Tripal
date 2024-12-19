@@ -135,71 +135,83 @@ Complaints Management
  <summary>Guest</summary>
  
 - Register as a tourist or tour guide/advertiser/seller
-- Upload required documents
+- View, filter, and sort upcoming activities/itineraries by various criteria (price, ratings, date, etc.)
 
 </details>
 
 <details>
  <summary>Tourist</summary>
  
-- Create and update profile
-- Search for historical places/activities/itineraries
-- View and filter upcoming activities/itineraries by various criteria (price, ratings, date, etc.)
-- Book tickets for events/activities/itineraries/flights/hotels
+- View, filter, sort & search through upcoming events/historical places by various criteria (price, ratings, date, etc.)
+- Bookmark events so that I can view them later
+- Book tickets for events/activities/itineraries/flights/hotels/transportation 
+- View my history of bookings for events/flights/hotels that are upcoming or I have already attended
 - Cancel bookings
-- Rate and comment on tour guides, itineraries, and events
-- Receive loyalty points and badges
+- Rate & comment on tour guides, products I bought & events that I attended
+- Receive loyalty points & badges
 - Redeem points for cash in wallet
-- File complaints and view their status
-- View and manage wishlist and cart for products
-- Pay online for events/activities/itineraries
-- Receive notifications for upcoming events and bookings
-- View current and past orders, and order details
+- File complaints & view their status
+- View, filter, sort, and search through all available products 
+- Add products to my wishlist or cart & view/update them 
+- Pay online for events using a card/from wallet
+- Receive notifications for upcoming events & bookings via email/on the website
+- View current and past orders with their details
 - Use promo codes during bookings
+- Share activities/places/products links
+- Change the currency I want to view prices in
+- View a step-by-step vacation booking guide
 
 </details>
 
 <details>
  <summary>Tour Guide</summary>
  
-- Create, read, update, and delete itineraries with detailed information
+- Create, read, update & delete itineraries with detailed information
 - Activate/deactivate itineraries with bookings
-- View sales reports and total number of tourists for activities
+- View & filter sales reports containing all my revenue/ reports of the number of tourists that attended my events
+- Receive notifications when an itinerary of mine is flagged as inappropriate via email/on the system
 
 </details>
 
 <details>
  <summary>Advertiser</summary>
  
-- Create, read, update, and delete company profiles and activities
-- View sales reports
+- Create, read, update & delete activities
+- View & filter sales reports containing all my revenue/ reports of the number of tourists that attended my events
+- Receive notifications when an activity of mine is flagged as inappropriate via email/on the system
 
 </details>
 
 <details>
  <summary>Seller</summary>
  
-- Create, read, update, and delete product listings
-- View available quantity and sales of products
-- Receive notifications for out-of-stock products
+- Create, read, update & delete product listings
+- View, filter, sort and search through available products with their details 
+- View & filter sales reports of products
+- Receive notifications for out-of-stock products on the system/via email
+- Archive/unarchive a product
 
 </details>
 
 <details>
  <summary>Admin</summary>
  
-- Manage user accounts (delete, add admins, accept/reject registrations)
-- Create, read, update, and delete activities, categories, and preference tags
-- View and manage complaints
-- View sales reports and user statistics
-- Create promo codes and manage notifications
+- Manage user accounts (delete, add admins, add tourism governor, view uploaded documents, accept/reject registrations)
+- Create, read, update & delete activity categories & preference tags
+- View, filter, sort, search through lists of all events, historical places & products listed on the system
+- Flag an event deemed inappropriate
+- Archive/unarchive a product
+- View, sort, filter through & manage complaints
+- View & filter sales reports 
+- View user statistics per month
+- Create promo codes
 
 </details>
 
 <details>
  <summary>Tourism Governor</summary>
  
-- Create, read, update, and delete historical places
+- Create, read, update & delete historical places
 - Create tags for historical locations
 
 </details>
@@ -207,11 +219,13 @@ Complaints Management
 <details>
  <summary>General Features</summary>
  
+- Create & update profile 
 - Login and password recovery via OTP
 - Change password
 - Upload pictures and documents
-- View step-by-step vacation guide
-- Notifications for various activities and events
+- Notifications for various events
+- Accept the terms and conditions if accepted on the system
+- Delete my account off the system 
 
 </details>
 
